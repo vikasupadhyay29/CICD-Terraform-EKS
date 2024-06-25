@@ -1,17 +1,36 @@
 #!/bin/bash
-# Java installation for jenkins
+#!/bin/bash
 
-sudo apt update
-sudo apt install openjdk-11-jre -y
+# Update and upgrade the system packages
+sudo apt update -y && sudo apt upgrade -y
 
-# Jenkins installation 
-curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update
-sudo apt-get install jenkins -y
+# Install OpenJDK 17
+sudo apt install -y openjdk-17-jre
+
+# Add the Jenkins repository key to the system
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null 
+
+# Add the Jenkins repository to the system's sources list
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+# Update the package list to include the new Jenkins repository
+sudo apt update -y
+
+# Install Jenkins
+sudo apt install -y jenkins
+
+# Enable the Jenkins service to start on boot
+sudo systemctl enable jenkins
+
+# Start the Jenkins service
+sudo systemctl start jenkins
+
+# Check the status of the Jenkins service
+sudo systemctl status jenkins
+
+# Display the initial admin password for Jenkins setup
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
 
 # Terraform Installation
 
